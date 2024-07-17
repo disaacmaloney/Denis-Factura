@@ -1,0 +1,257 @@
+{
+    "products": [
+      {
+        "id": "A",
+        "barcode": "12345012",
+        "internal_code": "INT001",
+        "product_name": "Producto A",
+        "unit_price": 1000.50
+      },
+      {
+        "id": "B",
+        "barcode": "12345013",
+        "internal_code": "INT002",
+        "product_name": "Producto B",
+        "unit_price": 15.75
+      },
+      {
+        "id": "C",
+        "barcode": "12345014",
+        "internal_code": "INT003",
+        "product_name": "Producto C",
+        "unit_price": 20.00
+      },
+      {
+        "id": "D",
+        "barcode": "12345015",
+        "internal_code": "INT004",
+        "product_name": "Producto D",
+        "unit_price": 25.30
+      },
+      {
+        "id": "E",
+        "barcode": "12345016",
+        "internal_code": "INT005",
+        "product_name": "Producto E",
+        "unit_price": 30.10
+      },
+      {
+        "id": "F",
+        "barcode": "12345017",
+        "internal_code": "INT006",
+        "product_name": "Producto F",
+        "unit_price": 12.00
+      },
+      {
+        "id": "G",
+        "barcode": "12345018",
+        "internal_code": "INT007",
+        "product_name": "Producto G",
+        "unit_price": 18.40
+      },
+      {
+        "id": "H",
+        "barcode": "12345019",
+        "internal_code": "INT008",
+        "product_name": "Producto H",
+        "unit_price": 22.90
+      },
+      {
+        "id": "I",
+        "barcode": "12345020",
+        "internal_code": "INT009",
+        "product_name": "Producto I",
+        "unit_price": 27.50
+      },
+      {
+        "id": "J",
+        "barcode": "12345021",
+        "internal_code": "INT010",
+        "product_name": "Producto J",
+        "unit_price": 35.70
+      },
+      {
+        "id": "K",
+        "barcode": "12345022",
+        "internal_code": "INT011",
+        "product_name": "Producto K",
+        "unit_price": 40.25
+      },
+      {
+        "id": "L",
+        "barcode": "12345023",
+        "internal_code": "INT012",
+        "product_name": "Producto L",
+        "unit_price": 13.60
+      },
+      {
+        "id": "M",
+        "barcode": "12345024",
+        "internal_code": "INT013",
+        "product_name": "Producto M",
+        "unit_price": 19.90
+      },
+      {
+        "id": "N",
+        "barcode": "12345025",
+        "internal_code": "INT014",
+        "product_name": "Producto N",
+        "unit_price": 23.40
+      },
+      {
+        "id": "O",
+        "barcode": "12345026",
+        "internal_code": "INT015",
+        "product_name": "Producto O",
+        "unit_price": 29.80
+      },
+      {
+        "id": "P",
+        "barcode": "12345027",
+        "internal_code": "INT016",
+        "product_name": "Producto P",
+        "unit_price": 32.00
+      },
+      {
+        "id": "Q",
+        "barcode": "12345028",
+        "internal_code": "INT017",
+        "product_name": "Producto Q",
+        "unit_price": 21.00
+      },
+      {
+        "id": "R",
+        "barcode": "12345029",
+        "internal_code": "INT018",
+        "product_name": "Producto R",
+        "unit_price": 24.90
+      },
+      {
+        "id": "S",
+        "barcode": "12345030",
+        "internal_code": "INT019",
+        "product_name": "Producto S",
+        "unit_price": 27.70
+      },
+      {
+        "id": "T",
+        "barcode": "12345031",
+        "internal_code": "INT020",
+        "product_name": "Producto T",
+        "unit_price": 30.50
+      },
+      {
+        "id": "U",
+        "barcode": "12345032",
+        "internal_code": "INT021",
+        "product_name": "Producto U",
+        "unit_price": 33.10
+      },
+      {
+        "id": "V",
+        "barcode": "12345033",
+        "internal_code": "INT022",
+        "product_name": "Producto V",
+        "unit_price": 18.20
+      },
+      {
+        "id": "W",
+        "barcode": "12345034",
+        "internal_code": "INT023",
+        "product_name": "Producto W",
+        "unit_price": 22.00
+      },
+      {
+        "id": "X",
+        "barcode": "12345035",
+        "internal_code": "INT024",
+        "product_name": "Producto X",
+        "unit_price": 26.50
+      },
+      {
+        "id": "Y",
+        "barcode": "12345036",
+        "internal_code": "INT025",
+        "product_name": "Producto Y",
+        "unit_price": 31.00
+      },
+      {
+        "id": "Z",
+        "barcode": "12345037",
+        "internal_code": "INT026",
+        "product_name": "Producto Z",
+        "unit_price": 34.50
+      },
+      {
+        "id": "0",
+        "barcode": "12345038",
+        "internal_code": "INT027",
+        "product_name": "Producto 0",
+        "unit_price": 20.00
+      },
+      {
+        "id": "1",
+        "barcode": "12345039",
+        "internal_code": "INT028",
+        "product_name": "Producto 1",
+        "unit_price": 15.00
+      },
+      {
+        "id": "2",
+        "barcode": "12345040",
+        "internal_code": "INT029",
+        "product_name": "Producto 2",
+        "unit_price": 25.00
+      },
+      {
+        "id": "3",
+        "barcode": "12345041",
+        "internal_code": "INT030",
+        "product_name": "Producto 3",
+        "unit_price": 30.00
+      },
+      {
+        "id": "4",
+        "barcode": "12345042",
+        "internal_code": "INT031",
+        "product_name": "Producto 4",
+        "unit_price": 35.00
+      },
+      {
+        "id": "5",
+        "barcode": "12345043",
+        "internal_code": "INT032",
+        "product_name": "Producto 5",
+        "unit_price": 40.00
+      },
+      {
+        "id": "6",
+        "barcode": "12345044",
+        "internal_code": "INT033",
+        "product_name": "Producto 6",
+        "unit_price": 45.00
+      },
+      {
+        "id": "7",
+        "barcode": "12345045",
+        "internal_code": "INT034",
+        "product_name": "Producto 7",
+        "unit_price": 50.00
+      },
+      {
+        "id": "8",
+        "barcode": "12345046",
+        "internal_code": "INT035",
+        "product_name": "Producto 8",
+        "unit_price": 55.00
+      },
+      {
+        "id": "9",
+        "barcode": "12345047",
+        "internal_code": "INT036",
+        "product_name": "Producto 9",
+        "unit_price": 60.00
+      }
+    ]
+  }
+  

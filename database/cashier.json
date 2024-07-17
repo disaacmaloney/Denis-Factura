@@ -1,0 +1,9 @@
+{
+    "cashier": [
+        {"id": 1, "cashierName": "Caja 1"},
+        {"id": 2, "cashierName": "Caja 2"},
+        {"id": 3, "cashierName": "Caja 3"},
+        {"id": 4, "cashierName": "Caja 4"},
+        {"id": 5, "cashierName": "Caja 5"}
+    ]
+}

@@ -1,0 +1,9 @@
+{
+    "cashierUser": [
+        {"id": 1, "firstName": "Juan", "lastName": "Pérez"},
+        {"id": 2, "firstName": "Ana", "lastName": "Martínez"},
+        {"id": 3, "firstName": "Carlos", "lastName": "Gómez"},
+        {"id": 4, "firstName": "Lucía", "lastName": "Fernández"},
+        {"id": 5, "firstName": "Miguel", "lastName": "Rodríguez"}
+    ]
+}

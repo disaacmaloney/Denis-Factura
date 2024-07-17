@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apertura de Caja</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.16/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body class="bg-gray-100 p-10">
+    <div id="apertura-container" class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+        <div class="mb-4">
+            <label for="fecha-apertura" class="block text-gray-700 font-bold mb-2">Fecha de Apertura:</label>
+            <input type="text" id="fecha-apertura" name="fecha-apertura" class="w-full p-2 border border-gray-300 rounded" readonly>
+        </div>
+        <div class="mb-4">
+            <label for="hora-apertura" class="block text-gray-700 font-bold mb-2">Hora de Apertura:</label>
+            <input type="text" id="hora-apertura" name="hora-apertura" class="w-full p-2 border border-gray-300 rounded" readonly>
+        </div>
+        <div class="mb-4">
+            <label for="caja-apertura" class="block text-gray-700 font-bold mb-2">Caja a Abrir:</label>
+            <select id="caja-apertura" name="caja-apertura" class="w-full p-2 border border-gray-300 rounded"></select>
+        </div>
+        <div class="mb-4">
+            <label for="apertura-por" class="block text-gray-700 font-bold mb-2">Apertura por:</label>
+            <select id="apertura-por" name="apertura-por" class="w-full p-2 border border-gray-300 rounded"></select>
+        </div>
+        <div class="flex justify-between">
+            <div class="w-1/2 pr-2">
+                <h2 class="text-lg font-bold mb-2">Monedas</h2>
+                <table id="monedas-table" class="w-full table-auto mb-4">
+                    <tbody>
+                        <!-- Filas generadas dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="w-1/2 pl-2">
+                <h2 class="text-lg font-bold mb-2">Billetes</h2>
+                <table id="billetes-table" class="w-full table-auto mb-4">
+                    <tbody>
+                        <!-- Filas generadas dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="flex justify-between mb-2">
+            <span class="font-bold">SubTotal:</span>
+            <span class="font-bold" id="subtotal">0</span>
+        </div>
+        <div class="flex justify-between mb-4">
+            <span class="font-bold">Total:</span>
+            <span class="font-bold" id="total">0</span>
+        </div>
+        <button id="apertura-btn" class="w-full bg-blue-500 text-white py-2 rounded">APERTURA</button>
+    </div>
+    <script src="../script/index.js"></script>
+</body>
+</html>

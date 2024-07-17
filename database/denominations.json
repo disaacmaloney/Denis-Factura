@@ -1,0 +1,19 @@
+{
+  "currency": {
+    "moneda": [
+      { "value": "0.01", "label": "1 centavo" },
+      { "value": "0.05", "label": "5 centavos" },
+      { "value": "0.10", "label": "10 centavos" },
+      { "value": "0.20", "label": "20 centavos" },
+      { "value": "0.50", "label": "50 centavos" }
+    ],
+    "billete": [
+      { "value": "1", "label": "1 dólar" },
+      { "value": "5", "label": "5 dólares" },
+      { "value": "10", "label": "10 dólares" },
+      { "value": "20", "label": "20 dólares" },
+      { "value": "50", "label": "50 dólares" },
+      { "value": "100", "label": "100 dólares" }
+    ]
+  }
+}
