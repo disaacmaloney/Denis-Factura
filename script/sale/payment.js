@@ -1,52 +1,115 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const tourOperSelect = document.getElementById("tour-operador");
-  
-    function calcularTotalIngresado() {
-        const efectivo = parseFloat(document.getElementById('efectivo').value) || 0;
-        const tarjetaVisa = parseFloat(document.getElementById('tarjeta-visa').value) || 0;
-        const tarjetaAMEX = parseFloat(document.getElementById('tarjeta-amex').value) || 0;
-        const tarjetaMastercard = parseFloat(document.getElementById('tarjeta-mastercard').value) || 0;
-        const notaCredito = parseFloat(document.getElementById('nota-credito').value) || 0;
-
-        const totalIngresado = efectivo + tarjetaVisa + tarjetaAMEX + tarjetaMastercard + notaCredito;
-        document.getElementById('ingresado').textContent = `$${totalIngresado.toFixed(2)}`;
-        return totalIngresado;
+  document.getElementById('pagar-btn').addEventListener('click', function() {
+    if (!tourOperadorElement.textContent || !nombreClienteInput.textContent) {
+        Swal.fire('Error', 'Debe seleccionar un Tour Operador y un Cliente', 'error');
+        return;
     }
 
-    function actualizarTotales() {
-        const totalArticulos = productos.reduce((total, producto) => total + producto.cantidad, 0);
-        const totalAPagar = productos.reduce((total, producto) => total + producto.precioFinal, 0);
-        const totalIngresado = calcularTotalIngresado();
-        const totalDescuento = productos.reduce((total, producto) => total + (producto.descuentoDinero * producto.cantidad), 0);
-        const cambio = Math.max(0, totalIngresado - totalAPagar);
+    const factura = {
+        clienteId: nombreClienteInput.textContent,
+        tourOperadorId: tourOperadorElement.textContent,
+        productos: productos,
+        totalAPagar: parseFloat(totalAPagarElement.textContent.replace('$', '')),
+        totalIngresado: calcularTotalIngresado(),
+        pendiente: parseFloat(pendienteElement.textContent.replace('$', '')),
+        cajero: cajero
+    };
 
-        totalArticulosElement.textContent = totalArticulos;
-        totalAPagarElement.textContent = `$${totalAPagar.toLocaleString(
-            "es-PA",
-            { minimumFractionDigits: 2, maximumFractionDigits: 2 }
-          )}`;
-        pendienteElement.textContent = `$${Math.max(0, totalAPagar - totalIngresado).toLocaleString(
-            "es-PA",
-            { minimumFractionDigits: 2, maximumFractionDigits: 2 }
-          )}`;
-        totalDescuentoElement.textContent = `$${totalDescuento.toLocaleString(
-            "es-PA",
-            { minimumFractionDigits: 2, maximumFractionDigits: 2 }
-          )}`;
-        document.getElementById('cambio').textContent = `$${cambio.toLocaleString(
-            "es-PA",
-            { minimumFractionDigits: 2, maximumFractionDigits: 2 }
-          )}`;
+    localStorage.setItem('factura', JSON.stringify(factura));
+    Swal.fire('Éxito', 'Factura generada con éxito', 'success');
+    limpiarTransaccion();
+});
 
-        if (totalIngresado >= totalAPagar && totalArticulos > 0) {
-            document.getElementById('pagar-btn').disabled = false;
-            document.getElementById('pagar-btn').classList.remove('bg-gray-500');
-            document.getElementById('pagar-btn').classList.add('bg-blue-500');
-        } else {
-            document.getElementById('pagar-btn').disabled = true;
-            document.getElementById('pagar-btn').classList.remove('bg-blue-500');
-            document.getElementById('pagar-btn').classList.add('bg-gray-500');
+document.getElementById('cancelar-transaccion-btn').addEventListener('click', function() {
+    Swal.fire({
+        title: '¿Qué desea hacer?',
+        text: "Seleccione una opción",
+        icon: 'warning',
+        showCancelButton: true,
+        showDenyButton: true,
+        confirmButtonText: 'Limpiar pantalla',
+        denyButtonText: 'Guardar información',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            limpiarTransaccion();
+        } else if (result.isDenied) {
+            guardarInformacion();
+            limpiarTransaccion();
         }
-    }
+    });
+});
+
+document.getElementById('facturas-espera-btn').addEventListener('click', function() {
+    const facturasEsperaModal = document.getElementById('facturas-espera-modal');
+    const listaFacturasEspera = document.getElementById('lista-facturas-espera');
+
+    listaFacturasEspera.innerHTML = '';
+    facturasEnEspera.forEach((factura, index) => {
+        const li = document.createElement('li');
+        li.textContent = `Factura ${index + 1} - Cliente: ${factura.clienteId}`;
+        li.classList.add('p-2', 'cursor-pointer', 'hover:bg-gray-200');
+        li.dataset.index = index;
+        li.addEventListener('click', () => {
+            cargarFacturaEnEspera(index);
+            facturasEsperaModal.classList.add('hidden');
+        });
+        listaFacturasEspera.appendChild(li);
+    });
+
+    facturasEsperaModal.classList.remove('hidden');
+});
+
+document.getElementById('cerrar-facturas-espera-btn').addEventListener('click', function() {
+    document.getElementById('facturas-espera-modal').classList.add('hidden');
+});
+
+function guardarInformacion() {
+  const facturaPendiente = {
+      clienteId: nombreClienteInput.textContent,
+      tourOperadorId: tourOperadorElement.textContent,
+      productos: productos,
+      totalAPagar: parseFloat(totalAPagarElement.textContent.replace('$', '')),
+      totalIngresado: calcularTotalIngresado(),
+      pendiente: parseFloat(pendienteElement.textContent.replace('$', '')),
+      cajero: cajero
+  };
+
+  facturasEnEspera.push(facturaPendiente);
+  localStorage.setItem('facturasEnEspera', JSON.stringify(facturasEnEspera));
+  Swal.fire('Guardado!', 'La información ha sido guardada.', 'success');
+}
+
+function cargarFacturaEnEspera(index) {
+  const factura = facturasEnEspera[index];
+  nombreClienteInput.textContent = factura.clienteId;
+  tourOperadorElement.textContent = factura.tourOperadorId;
+  productos = factura.productos.slice();  // Asegurarse de copiar los productos correctamente
+  facturasEnEspera.splice(index, 1);  // Eliminar la factura recuperada
+  localStorage.setItem('facturasEnEspera', JSON.stringify(facturasEnEspera));  // Guardar las facturas pendientes actualizadas
+  actualizarTabla();
+  actualizarTotales();
+}
+
+function limpiarTransaccion() {
+  productos = [];
+  actualizarTabla();
+  actualizarTotales();
+  nombreClienteInput.textContent = '';
+  tourOperadorElement.textContent = '';
+  limpiarMetodosDePago();
+}
+
+function limpiarMetodosDePago() {
+  document.getElementById('efectivo').value = '';
+  document.getElementById('tarjeta-visa').value = '';
+  document.getElementById('tarjeta-amex').value = '';
+  document.getElementById('tarjeta-mastercard').value = '';
+  document.getElementById('nota-credito').value = '';
+  document.getElementById('cambio').textContent = '$0.00';
+  document.getElementById('ingresado').textContent = '$0.00';
+}
+
+
   });
   

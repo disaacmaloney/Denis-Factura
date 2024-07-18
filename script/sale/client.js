@@ -1,13 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    
-
-    const nombreClienteInput = document.getElementById('cliente-nombre');
-    const cajeroElement = document.getElementById('cajero');
-    const tourOperadorElement = document.getElementById('tour-operador');
-    const cajero = localStorage.getItem('cajeroNombre');
-
-
-
 
     document.getElementById('nuevo-cliente-btn').addEventListener('click', function() {
         document.getElementById('nuevo-cliente-modal').classList.remove('hidden');
@@ -50,20 +41,13 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
 
-    
-    
+    function limpiarFormularioNuevoCliente() {
+        document.getElementById('nuevo-nombre').value = '';
+        document.getElementById('nuevo-apellido').value = '';
+        document.getElementById('nuevo-pasaporte').value = '';
+        document.getElementById('nuevo-pais').value = '';
+    }
 
-    // Evento para el input de código de barras
-    
 
-    
-
-    
-
-    
-
-    
-
-    
 
 });
