@@ -1,182 +1,347 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pantalla de Cobro</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+    />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.16/jspdf.plugin.autotable.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/selectpure/dist/selectpure.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/selectpure/dist/selectpure.min.js"></script>
     <style>
-        table {
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        [contenteditable] {
-            border: 1px solid #ccc;
-            padding: 4px;
-            min-width: 50px;
-        }
+      table {
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border: 1px solid black;
+        padding: 8px;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      [contenteditable] {
+        border: 1px solid #ccc;
+        padding: 4px;
+        min-width: 50px;
+      }
     </style>
-</head>
-<body class="bg-gray-100 p-10">
-    <div id="venta-container" class="max-w-full mx-auto bg-white p-6 rounded-lg shadow-md  ">
-        <div class="grid grid-cols-3 gap-4 mb-4">
+  </head>
+  <body class="bg-gray-100 p-10">
+    <div
+      id="venta-container"
+      class="max-w-full mx-auto bg-white p-6 rounded-lg shadow-md"
+    >
+      <div class="grid grid-cols-3 gap-4 mb-4">
+        <div>
+          <label class="text-gray-700 font-bold">Cliente:</label>
+          <span id="cliente-nombre"></span>
+        </div>
+        <div>
+          <label class="text-gray-700 font-bold">Cajero:</label>
+          <span id="cajero"></span>
+        </div>
+        <div class="w-full gap-2 items-center">
+          <label>TourOperador:</label>
+          <select
+            id="tour-operador"
+            class="p-2 border border-gray-300 rounded mb-4"
+          >
+            <option value=""></option>
+          </select>
+        </div>
+      </div>
+
+      <input
+        type="text"
+        id="codigo-barras"
+        placeholder="Escanear código de barras"
+        class="w-full mb-4 p-2 border border-gray-300 rounded"
+      />
+
+      <table class="w-full mb-4">
+        <thead>
+          <tr>
+            <th>CódigoBarras</th>
+            <th>CódigoInterno</th>
+            <th>Nombre del Producto</th>
+            <th>Cantidad</th>
+            <th>Precio Unitario</th>
+            <th>Descuento %</th>
+            <th>Descuento $</th>
+            <th>Precio Final</th>
+            <th>Vendedor</th>
+            <th>Eliminar</th>
+          </tr>
+        </thead>
+        <tbody id="articulos-tbody"></tbody>
+      </table>
+
+      <div class="w-full">
+        <div class="grid w-full grid-cols-2 gap-1">
+          <div class="gap-2">
             <div>
-                <label class="text-gray-700 font-bold">Nombre:</label>
-                <span id="cliente-nombre"></span>
+              <label
+                htmlFor="total-articulos"
+                class="text-xl font-bold text-gray-700"
+              >
+                Total Artículos:
+              </label>
+              <span id="total-articulos" class="text-xl"> 0 </span>
             </div>
-            <div>
-                <label class="text-gray-700 font-bold">Cajero:</label>
-                <span id="cajero"></span>
-            </div>
-            <div>
-                <label class="block text-gray-700 font-bold">TourOperador:</label>
-                <span id="tour-operador"></span>
-            </div>
-        </div>
-
-        <input type="text" id="codigo-barras" placeholder="Escanear código de barras" class="w-full mb-4 p-2 border border-gray-300 rounded">
-
-        <table class="w-full mb-4">
-            <thead>
-                <tr>
-                    <th>CódigoBarras</th>
-                    <th>CódigoInterno</th>
-                    <th>Nombre del Producto</th>
-                    <th>Cantidad</th>
-                    <th>Precio Unitario</th>
-                    <th>Descuento %</th>
-                    <th>Descuento $</th>
-                    <th>Precio Final</th>
-                    <th>Vendedor</th>
-                    <th>Eliminar</th>
-                </tr>
-            </thead>
-            <tbody id="articulos-tbody">
-                <!-- Aquí se agregarán los artículos dinámicamente -->
-            </tbody>
-        </table>
-
-        <div class="grid grid-cols-2 gap-4 mb-4">
-            <div class="col-span-2">
-                <label class="block text-gray-700 font-bold text-xl">Total Artículos:</label>
-                <span id="total-articulos" class="text-xl">0</span>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-4 mb-4">
-            <div class="text-right col-span-2">
-                <label class="block text-gray-700 font-bold text-xl">Total a Pagar:</label>
-                <span id="total-pagar" class="text-xl">$0.00</span>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-4 mb-4">
-            <div class="col-span-2">
-                <label class="block text-gray-700 font-bold">Pendiente:</label>
-                <span id="pendiente">$0.00</span>
-            </div>
-        </div>
-
-        <h3 class="text-lg font-bold mb-2">MEDIOS DE PAGO</h3>
-        <table class="w-full table-auto mb-4">
-            <tbody>
-                <tr>
-                    <td class="p-2">Efectivo</td>
-                    <td class="p-2 text-right"><input type="number" id="efectivo" class="w-full border border-gray-300 p-2 rounded"></td>
-                </tr>
-                <tr>
-                    <td class="p-2">Cambio</td>
-                    <td class="p-2 text-right" id="cambio">$0.00</td>
-                </tr>
-                <tr>
-                    <td class="p-2">Tarjeta Visa</td>
-                    <td class="p-2 text-right"><input type="number" id="tarjeta-visa" class="w-full border border-gray-300 p-2 rounded"></td>
-                </tr>
-                <tr>
-                    <td class="p-2">Tarjeta AMEX</td>
-                    <td class="p-2 text-right"><input type="number" id="tarjeta-amex" class="w-full border border-gray-300 p-2 rounded"></td>
-                </tr>
-                <tr>
-                    <td class="p-2">Tarjeta Mastercard</td>
-                    <td class="p-2 text-right"><input type="number" id="tarjeta-mastercard" class="w-full border border-gray-300 p-2 rounded"></td>
-                </tr>
-                <tr>
-                    <td class="p-2">Nota de Crédito</td>
-                    <td class="p-2 text-right"><input type="number" id="nota-credito" class="w-full border border-gray-300 p-2 rounded"></td>
-                </tr>
-                <tr>
-                    <td class="p-2 font-bold">INGRESADO</td>
-                    <td class="p-2 text-right font-bold" id="ingresado">$0.00</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="grid grid-cols-2 gap-4 mb-4">
-            <button id="nuevo-cliente-btn" class="w-full bg-blue-500 text-white py-2 rounded mb-4">Cliente Nuevo</button>
-            <button id="tour-operador-btn" class="w-full bg-blue-500 text-white py-2 rounded mb-4">TourOperador</button>
-            <button id="facturas-espera-btn" class="w-full bg-blue-500 text-white py-2 rounded mb-4">Facturas en Espera</button>
-            <button id="devolucion-btn" class="w-full bg-blue-500 text-white py-2 rounded mb-4">Devolución</button>
-            <button id="cancelar-transaccion-btn" class="w-full bg-blue-500 text-white py-2 rounded mb-4">Cancelar Transacción</button>
-        </div>
-
-        <button id="cierre-dia-btn" class="w-full bg-black text-white py-2 rounded mb-4">Cierre del día</button>
-        <button id="pagar-btn" class="w-full bg-gray-500 text-white py-2 rounded" disabled>PAGAR</button>
-    </div>
-
-    <div id="nuevo-cliente-modal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <h2 class="text-lg font-bold mb-4">Nuevo Cliente</h2>
-            <label for="nuevo-nombre" class="block text-gray-700 font-bold mb-2">Nombre:</label>
-            <input type="text" id="nuevo-nombre" class="w-full p-2 border border-gray-300 rounded mb-4">
-            <label for="nuevo-apellido" class="block text-gray-700 font-bold mb-2">Apellido:</label>
-            <input type="text" id="nuevo-apellido" class="w-full p-2 border border-gray-300 rounded mb-4">
-            <label for="nuevo-pasaporte" class="block text-gray-700 font-bold mb-2">Pasaporte:</label>
-            <input type="text" id="nuevo-pasaporte" class="w-full p-2 border border-gray-300 rounded mb-4">
-            <label for="nuevo-pais" class="block text-gray-700 font-bold mb-2">País:</label>
-            <select id="nuevo-pais" class="w-full p-2 border border-gray-300 rounded mb-4">
-                <!-- Lista de países se cargará desde el archivo externo -->
-            </select>
+          </div>
+          <div>
             <div class="flex justify-end">
-                <button id="guardar-cliente-btn" class="bg-blue-500 text-white py-2 px-4 rounded mr-2">Guardar</button>
-                <button id="cancelar-cliente-btn" class="bg-red-500 text-white py-2 px-4 rounded">Cancelar</button>
+              <label
+                htmlFor="total-descuento"
+                class="text-xl font-bold text-gray-700"
+              >
+                Total decuento: $
+              </label>
+              <span id="total-descuento" class="text-xl"> 0.00 </span>
             </div>
+            <div class="flex justify-end">
+              <label
+                htmlFor="total-pagar"
+                class="text-xl font-bold text-gray-700"
+              >
+                Total a Pagar: $
+              </label>
+              <span id="total-pagar" class="text-xl"> 0.00 </span>
+            </div>
+          </div>
         </div>
+      </div>
+
+
+      <h3 class="text-lg font-bold mb-2">MEDIOS DE PAGO</h3>
+      <table class="w-full table-auto mb-4">
+        <tbody>
+            <tr>
+                <td class="p-2">Pendiente por pagar</td>
+                <td class="p-2 text-right">
+                    <span id="pendiente">$0.00</span>
+                </td>
+              </tr>
+          <tr>
+            <td class="p-2">Efectivo</td>
+            <td class="p-2 text-right">
+              <input
+                type="number"
+                id="efectivo"
+                class="w-full border border-gray-300 p-2 rounded"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td class="p-2">Cambio</td>
+            <td class="p-2 text-right" id="cambio">$0.00</td>
+          </tr>
+          <tr>
+            <td class="p-2">Tarjeta Visa</td>
+            <td class="p-2 text-right">
+              <input
+                type="number"
+                id="tarjeta-visa"
+                class="w-full border border-gray-300 p-2 rounded"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td class="p-2">Tarjeta AMEX</td>
+            <td class="p-2 text-right">
+              <input
+                type="number"
+                id="tarjeta-amex"
+                class="w-full border border-gray-300 p-2 rounded"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td class="p-2">Tarjeta Mastercard</td>
+            <td class="p-2 text-right">
+              <input
+                type="number"
+                id="tarjeta-mastercard"
+                class="w-full border border-gray-300 p-2 rounded"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td class="p-2">Nota de Crédito</td>
+            <td class="p-2 text-right">
+              <input
+                type="number"
+                id="nota-credito"
+                class="w-full border border-gray-300 p-2 rounded"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td class="p-2 font-bold">INGRESADO</td>
+            <td class="p-2 text-right font-bold" id="ingresado">$0.00</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <button
+          id="nuevo-cliente-btn"
+          class="w-full bg-blue-500 text-white py-2 rounded mb-4"
+        >
+          Cliente Nuevo
+        </button>
+        <button
+          id="facturas-espera-btn"
+          class="w-full bg-blue-500 text-white py-2 rounded mb-4"
+        >
+          Facturas en Espera
+        </button>
+        <button
+          id="devolucion-btn"
+          class="w-full bg-blue-500 text-white py-2 rounded mb-4"
+        >
+          Devolución
+        </button>
+        <button
+          id="cancelar-transaccion-btn"
+          class="w-full bg-blue-500 text-white py-2 rounded mb-4"
+        >
+          Cancelar Transacción
+        </button>
+      </div>
+
+      <button
+        id="cierre-dia-btn"
+        class="w-full bg-black text-white py-2 rounded mb-4"
+      >
+        Cierre del día
+      </button>
+      <button
+        id="pagar-btn"
+        class="w-full bg-gray-500 text-white py-2 rounded"
+        disabled
+      >
+        PAGAR
+      </button>
     </div>
 
-    <div id="tour-operador-modal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
-        <div class="bg-white p-6 rounded-lg shadow-md w-1/3">
-            <h2 class="text-lg font-bold mb-4">Seleccionar TourOperador</h2>
-            <input type="text" id="buscar-tour-operador" placeholder="Buscar..." class="w-full p-2 border border-gray-300 rounded mb-4">
-            <ul id="lista-tour-operadores" class="max-h-64 overflow-y-auto">
-                <!-- Lista de tour operadores se cargará dinámicamente -->
-            </ul>
-            <div class="flex justify-end mt-4">
-                <button id="cancelar-tour-operador-btn" class="bg-red-500 text-white py-2 px-4 rounded">Cancelar</button>
-            </div>
+    <div
+      id="nuevo-cliente-modal"
+      class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-lg font-bold mb-4">Nuevo Cliente</h2>
+        <label for="nuevo-nombre" class="block text-gray-700 font-bold mb-2"
+          >Nombre:</label
+        >
+        <input
+          type="text"
+          id="nuevo-nombre"
+          class="w-full p-2 border border-gray-300 rounded mb-4"
+        />
+        <label for="nuevo-apellido" class="block text-gray-700 font-bold mb-2"
+          >Apellido:</label
+        >
+        <input
+          type="text"
+          id="nuevo-apellido"
+          class="w-full p-2 border border-gray-300 rounded mb-4"
+        />
+        <label for="nuevo-pasaporte" class="block text-gray-700 font-bold mb-2"
+          >Pasaporte:</label
+        >
+        <input
+          type="text"
+          id="nuevo-pasaporte"
+          class="w-full p-2 border border-gray-300 rounded mb-4"
+        />
+        <label for="nuevo-pais" class="block text-gray-700 font-bold mb-2"
+          >País:</label
+        >
+        <select
+          id="nuevo-pais"
+          class="w-full p-2 border border-gray-300 rounded mb-4"
+        >
+          <!-- Lista de países se cargará desde el archivo externo -->
+        </select>
+        <div class="flex justify-end">
+          <button
+            id="guardar-cliente-btn"
+            class="bg-blue-500 text-white py-2 px-4 rounded mr-2"
+          >
+            Guardar
+          </button>
+          <button
+            id="cancelar-cliente-btn"
+            class="bg-red-500 text-white py-2 px-4 rounded"
+          >
+            Cancelar
+          </button>
         </div>
+      </div>
     </div>
 
-    <div id="facturas-espera-modal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
-        <div class="bg-white p-6 rounded-lg shadow-md w-2/3">
-            <h2 class="text-lg font-bold mb-4">Facturas en Espera</h2>
-            <ul id="lista-facturas-espera" class="max-h-64 overflow-y-auto">
-                <!-- Lista de facturas en espera se cargará dinámicamente -->
-            </ul>
-            <div class="flex justify-end mt-4">
-                <button id="cerrar-facturas-espera-btn" class="bg-red-500 text-white py-2 px-4 rounded">Cerrar</button>
-            </div>
+    <div
+      id="tour-operador-modal"
+      class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-md w-1/3">
+        <h2 class="text-lg font-bold mb-4">Seleccionar TourOperador</h2>
+        <input
+          type="text"
+          id="buscar-tour-operador"
+          placeholder="Buscar..."
+          class="w-full p-2 border border-gray-300 rounded mb-4"
+        />
+        <ul id="lista-tour-operadores" class="max-h-64 overflow-y-auto">
+          <!-- Lista de tour operadores se cargará dinámicamente -->
+        </ul>
+        <div class="flex justify-end mt-4">
+          <button
+            id="cancelar-tour-operador-btn"
+            class="bg-red-500 text-white py-2 px-4 rounded"
+          >
+            Cancelar
+          </button>
         </div>
+      </div>
     </div>
 
-    <script src="../script/sale.js"></script>
-</body>
+    <div
+      id="facturas-espera-modal"
+      class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-md w-2/3">
+        <h2 class="text-lg font-bold mb-4">Facturas en Espera</h2>
+        <ul id="lista-facturas-espera" class="max-h-64 overflow-y-auto">
+          <!-- Lista de facturas en espera se cargará dinámicamente -->
+        </ul>
+        <div class="flex justify-end mt-4">
+          <button
+            id="cerrar-facturas-espera-btn"
+            class="bg-red-500 text-white py-2 px-4 rounded"
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../script/sale/cashier.js"></script>
+    <script src="../script/sale/tourOperator.js"></script>
+    <script src="../script/sale/products.js"></script>
+  </body>
 </html>
-
