@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
   let productos = [];
   let productosJSON = [];
+  let facturasEnEspera =
+    JSON.parse(localStorage.getItem("facturasEnEspera")) || [];
 
   const inputCodigoBarras = document.getElementById("codigo-barras");
   const tablaProductos = document.getElementById("articulos-tbody");
@@ -8,6 +10,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const totalAPagarElement = document.getElementById("total-pagar");
   const totalDescuentoElement = document.getElementById("total-descuento");
   const pendienteElement = document.getElementById("pendiente");
+  const nombreClienteInput = document.getElementById("cliente-nombre");
+
+  const tourOpe = document.getElementById("tour-operador");
+  const tourOperadorElement = tourOpe.options[tourOpe.selectedIndex].text;
 
   fetch("../../database/products.json")
     .then((response) => response.json())
@@ -233,7 +239,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const cambio = Math.max(0, totalIngresado - totalAPagar);
     document.getElementById("cambio").textContent = `$${cambio.toFixed(2)}`;
   }
-  
+
   function calcularTotalIngresado() {
     const efectivo = parseFloat(document.getElementById("efectivo").value) || 0;
     const tarjetaVisa =
@@ -258,5 +264,175 @@ document.addEventListener("DOMContentLoaded", function () {
     productos.splice(index, 1);
     actualizarTabla();
     actualizarTotales();
+  }
+
+  document
+    .getElementById("cancelar-transaccion-btn")
+    .addEventListener("click", function () {
+      Swal.fire({
+        title: "¿Qué desea hacer?",
+        text: "Seleccione una opción",
+        icon: "warning",
+        showCancelButton: true,
+        showDenyButton: true,
+        confirmButtonText: "Limpiar pantalla",
+        denyButtonText: "Guardar información",
+        cancelButtonText: "Cancelar",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          limpiarTransaccion();
+        } else if (result.isDenied) {
+          guardarInformacion();
+          limpiarTransaccion();
+        }
+      });
+    });
+
+  function guardarInformacion() {
+    const facturaPendiente = {
+      clienteId: nombreClienteInput.textContent,
+      tourOperadorId: tourOperadorElement.textContent,
+      productos: productos,
+      totalAPagar: parseFloat(totalAPagarElement.textContent.replace("$", "")),
+      totalIngresado: calcularTotalIngresado(),
+      pendiente: parseFloat(pendienteElement.textContent.replace("$", "")),
+      cajero: cajero,
+    };
+
+    facturasEnEspera.push(facturaPendiente);
+    localStorage.setItem("facturasEnEspera", JSON.stringify(facturasEnEspera));
+    Swal.fire("Guardado!", "La información ha sido guardada.", "success");
+  }
+
+  function limpiarTransaccion() {
+    productos = [];
+    actualizarTabla();
+    actualizarTotales();
+    nombreClienteInput.textContent = "";
+    tourOperadorElement.textContent = "";
+    limpiarMetodosDePago();
+  }
+
+  function limpiarMetodosDePago() {
+    document.getElementById("efectivo").value = "";
+    document.getElementById("tarjeta-visa").value = "";
+    document.getElementById("tarjeta-amex").value = "";
+    document.getElementById("tarjeta-mastercard").value = "";
+    document.getElementById("nota-credito").value = "";
+    document.getElementById("cambio").textContent = "$0.00";
+    document.getElementById("ingresado").textContent = "$0.00";
+  }
+
+  document.getElementById("pagar-btn").addEventListener("click", function () {
+    if (!tourOperadorElement.textContent || !nombreClienteInput.textContent) {
+      Swal.fire(
+        "Error",
+        "Debe seleccionar un Tour Operador y un Cliente",
+        "error"
+      );
+      return;
+    }
+
+    const factura = {
+      clienteId: nombreClienteInput.textContent,
+      tourOperadorId: tourOperadorElement.textContent,
+      productos: productos,
+      totalAPagar: parseFloat(totalAPagarElement.textContent.replace("$", "")),
+      totalIngresado: calcularTotalIngresado(),
+      pendiente: parseFloat(pendienteElement.textContent.replace("$", "")),
+      cajero: cajero,
+    };
+
+    localStorage.setItem("factura", JSON.stringify(factura));
+    Swal.fire("Éxito", "Factura generada con éxito", "success");
+    limpiarTransaccion();
+  });
+
+  const facturasEsperaBtn = document.getElementById("facturas-espera-btn");
+  const cerrarFacturasEsperaBtn = document.getElementById(
+    "cerrar-facturas-espera-btn"
+  );
+  const listaFacturasEspera = document.getElementById("lista-facturas-espera");
+  const facturasEsperaModal = document.getElementById("facturas-espera-modal");
+
+  facturasEsperaBtn.addEventListener("click", function () {
+    cargarListaFacturasEnEspera();
+    facturasEsperaModal.classList.remove("hidden");
+  });
+
+  // Cerrar el modal de facturas en espera
+  cerrarFacturasEsperaBtn.addEventListener("click", function () {
+    facturasEsperaModal.classList.add("hidden");
+  });
+
+  // Función para cargar la lista de facturas en espera
+  function cargarListaFacturasEnEspera() {
+    const facturasEnEspera =
+      JSON.parse(localStorage.getItem("facturasEnEspera")) || [];
+    listaFacturasEspera.innerHTML = "";
+
+    facturasEnEspera.forEach((factura, index) => {
+      const listItem = document.createElement("li");
+      listItem.classList.add(
+        "mb-2",
+        "p-2",
+        "border",
+        "border-gray-300",
+        "rounded",
+        "cursor-pointer"
+      );
+      listItem.textContent = `Factura ${index + 1}: Cliente ${
+        factura.clienteId
+      }, Tour Operador ${factura.tourOperadorId}`;
+      listItem.addEventListener("click", function () {
+        cargarFacturaEnEspera(index);
+        facturasEsperaModal.classList.add("hidden");
+      });
+      listaFacturasEspera.appendChild(listItem);
+    });
+  }
+
+  // Función para cargar una factura en espera
+  function cargarFacturaEnEspera(index) {
+    const facturasEnEspera =
+      JSON.parse(localStorage.getItem("facturasEnEspera")) || [];
+    const factura = facturasEnEspera[index];
+    if (factura) {
+      document.getElementById("cliente-nombre").textContent = factura.clienteId;
+      document.getElementById("tour-operador").textContent =
+        factura.tourOperadorId;
+      productos = factura.productos.slice(); // Asegurarse de copiar los productos correctamente
+      facturasEnEspera.splice(index, 1); // Eliminar la factura recuperada
+      localStorage.setItem(
+        "facturasEnEspera",
+        JSON.stringify(facturasEnEspera)
+      ); // Guardar las facturas pendientes actualizadas
+      actualizarTabla();
+      actualizarTotales();
+    }
+  }
+
+  // Cerrar el modal de facturas en espera
+  cerrarFacturasEsperaBtn.addEventListener("click", function () {
+    facturasEsperaModal.classList.add("hidden");
+  });
+
+  function cargarFacturaEnEspera(index) {
+    const facturasEnEspera =
+      JSON.parse(localStorage.getItem("facturasEnEspera")) || [];
+    const factura = facturasEnEspera[index];
+    if (factura) {
+      document.getElementById("cliente-nombre").textContent = factura.clienteId;
+      document.getElementById("tour-operador").textContent =
+        factura.tourOperadorId;
+      productos = factura.productos.slice(); // Asegurarse de copiar los productos correctamente
+      facturasEnEspera.splice(index, 1); // Eliminar la factura recuperada
+      localStorage.setItem(
+        "facturasEnEspera",
+        JSON.stringify(facturasEnEspera)
+      ); // Guardar las facturas pendientes actualizadas
+      actualizarTabla();
+      actualizarTotales();
+    }
   }
 });
